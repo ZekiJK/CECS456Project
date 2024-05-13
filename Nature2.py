@@ -54,7 +54,7 @@ train_gen = train_datagen.flow_from_directory(
     subset='training'  # Use subset for training data
 )
 
-validation_generator = train_datagen.flow_from_directory(
+validation_gen = train_datagen.flow_from_directory(
     train_dir,
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
@@ -66,14 +66,14 @@ validation_generator = train_datagen.flow_from_directory(
 history = model.fit(
     train_gen,
     epochs=10,
-    validation_data=validation_generator
+    validation_data=validation_gen
 )
 
 
 model.save('vgg16_model.h5')
 
 
-predictions = model.predict(validation_generator)
+predictions = model.predict(validation_gen)
 
 
 first_image_prediction = predictions[0]
@@ -83,6 +83,6 @@ print("Predicted class index:", predicted_class_index)
 print("Predicted class:", list(predicted_class.keys())[list(predicted_class.values()).index(predicted_class_index)])
 
 
-validation_loss, validation_accuracy = model.evaluate(validation_generator)
+validation_loss, validation_accuracy = model.evaluate(validation_gen)
 print("Validation Loss:", validation_loss)
 print("Validation Accuracy:", validation_accuracy)
