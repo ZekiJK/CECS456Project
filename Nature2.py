@@ -46,7 +46,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 
-train_generator = train_datagen.flow_from_directory(
+train_gen = train_datagen.flow_from_directory(
     train_dir,
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
@@ -64,7 +64,7 @@ validation_generator = train_datagen.flow_from_directory(
 
 
 history = model.fit(
-    train_generator,
+    train_gen,
     epochs=10,
     validation_data=validation_generator
 )
@@ -78,7 +78,7 @@ predictions = model.predict(validation_generator)
 
 first_image_prediction = predictions[0]
 predicted_class_index = np.argmax(first_image_prediction)
-predicted_class = train_generator.class_indices
+predicted_class = train_gen.class_indices
 print("Predicted class index:", predicted_class_index)
 print("Predicted class:", list(predicted_class.keys())[list(predicted_class.values()).index(predicted_class_index)])
 
