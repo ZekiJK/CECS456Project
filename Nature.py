@@ -24,7 +24,7 @@ train_datagen = ImageDataGenerator(
 )
 
 
-train_generator = train_datagen.flow_from_directory(
+train_gen = train_datagen.flow_from_directory(
     train_dir,
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
@@ -33,7 +33,7 @@ train_generator = train_datagen.flow_from_directory(
 )
 
 # Load validation data from directory
-validation_generator = train_datagen.flow_from_directory(
+validation_gen = train_datagen.flow_from_directory(
     train_dir,
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
@@ -61,9 +61,9 @@ model.compile(optimizer='adam',
 
 # Train the model
 history = model.fit(
-    train_generator,
+    train_gen,
     epochs=10,
-    validation_data=validation_generator
+    validation_data=validation_gen
 )
 
 # Save the model
@@ -71,16 +71,16 @@ model.save('my_model.h5')
 loaded_model = tf.keras.models.load_model('my_model.h5')
 
 # Evaluate the loaded model on the validation set
-validation_loss, validation_accuracy = loaded_model.evaluate(validation_generator)
+validation_loss, validation_accuracy = loaded_model.evaluate(validation_gen)
 print("Validation Loss:", validation_loss)
 print("Validation Accuracy:", validation_accuracy)
 
 # Make predictions on new data
-predictions = loaded_model.predict(validation_generator)
+predictions = loaded_model.predict(validation_gen)
 
 # Example: Print the predicted class for the first image in the validation set
 first_image_prediction = predictions[0]
 predicted_class_index = np.argmax(first_image_prediction)
-predicted_class = train_generator.class_indices
+predicted_class = train_gen.class_indices
 print("Predicted class index:", predicted_class_index)
 print("Predicted class:", list(predicted_class.keys())[list(predicted_class.values()).index(predicted_class_index)])
