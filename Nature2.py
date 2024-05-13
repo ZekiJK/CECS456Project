@@ -10,7 +10,7 @@ IMAGE_SIZE = (150, 150)
 BATCH_SIZE = 32
 
 
-train_dir = 'D:/CECS456Project/data/natural_images'
+train_dir = 'D:/CECS456Project/data/natural_images' #pathway
 
 
 train_datagen = ImageDataGenerator(
@@ -32,7 +32,7 @@ base_model = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150,
 for layer in base_model.layers:
     layer.trainable = False
 
-
+#classification model on top of the base VGG16 model
 model = Sequential([
     base_model,
     GlobalAveragePooling2D(),
@@ -45,7 +45,7 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-
+#generate trainning and validation data batches from directories
 train_gen = train_datagen.flow_from_directory(
     train_dir,
     target_size=IMAGE_SIZE,
@@ -59,7 +59,7 @@ validation_gen = train_datagen.flow_from_directory(
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
     class_mode='categorical',
-    subset='validation'
+    subset='validation' 
 )
 
 
@@ -70,10 +70,10 @@ history = model.fit(
 )
 
 
-model.save('vgg16_model.h5')
+model.save('vgg16_model.h5') #saved trained model
 
 
-predictions = model.predict(validation_gen)
+predictions = model.predict(validation_gen) #make predictions on validation data
 
 
 first_image_prediction = predictions[0]
